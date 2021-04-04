@@ -1,0 +1,7 @@
+::ng-deep .ag-theme-balham .ag-header-cell, .ag-theme-balham .ag-header-group-cell {
+    background-color: white;
+}
+
+::ng-deep .ag-header-cell-text {
+    font-weight: bolder;
+}
