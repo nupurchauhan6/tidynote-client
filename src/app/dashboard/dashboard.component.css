@@ -1,0 +1,31 @@
+.sidebar {
+    background-color: #007bff;
+}
+
+.dashboard {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.menu {
+    color: white;
+    margin: 15px;
+    font-weight: 500;
+}
+
+.breakpoint {
+    border-bottom: 1px solid #dadde1;
+    display: flex;
+    margin: 10px 0px;
+}
+
+.toggle_btn {
+    color: white;
+    text-align: end;
+    cursor: pointer;
+}
+
+.menu_icon {
+    margin-right: 10px;
+}

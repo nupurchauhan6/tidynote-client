@@ -1,33 +1,45 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { ContentChange, QuillEditorComponent, QuillModule } from 'ngx-quill';
-import { EditorService } from './editor.service';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { QuillEditorComponent, QuillModule } from 'ngx-quill';
+import { Note } from '../models/note';
+import * as UserSelectors from '../selectors/user.selector';
+import * as NoteActions from '../actions/note.action';
+import { AppState } from '../state/app.state';
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.css']
 })
-export class EditorComponent implements OnInit, OnChanges {
+export class EditorComponent implements OnInit {
 
-  @Input() public content: string;
-  @Input() public readOnly: boolean;
+  public title: string;
+  public content: string;
+  public readOnly: boolean;
   @ViewChild('editor', { static: false }) editor: TemplateRef<QuillEditorComponent>;
-  @Input() public modules: QuillModule;
+  public modules: QuillModule;
+  private userId: string;
 
-  constructor(private editorService: EditorService) { }
+  constructor(public modalRef: BsModalRef, private store: Store<AppState>) { }
 
   ngOnInit(): void {
+    this.store.select(UserSelectors.getUserID).subscribe(userId => {
+      this.userId = userId;
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
-
-  onContentChanged(event: ContentChange) {
-    if (event.html) {
-      this.content = event.html;
-      this.editorService.setEditorContent(this.content);
-    }
+  onSaveClick(): void {
+    const currentDate = new Date();
+    const newNote: Note = {
+      content: this.content,
+      title: this.title,
+      noteId: this.userId + '_' + currentDate.getTime(),
+      createdDate: currentDate.toLocaleString(),
+      updatedDate: currentDate.toLocaleString(),
+      userId: this.userId
+    };
+    this.store.dispatch(NoteActions.addNote({ newNote: newNote }));
   }
 
 }

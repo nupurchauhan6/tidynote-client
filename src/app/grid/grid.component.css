@@ -5,3 +5,17 @@
 ::ng-deep .ag-header-cell-text {
     font-weight: bolder;
 }
+
+::ng-deep .ag-theme-balham .ag-root-wrapper {
+    border: solid 2px !important; 
+    border-color: #007bff !important;
+    border-radius: 8px !important;
+}
+
+::ng-deep .ag-theme-balham .ag-row {
+    border-color: #007bff !important;
+}
+
+::ng-deep .ag-theme-balham .ag-header {
+    border-bottom-color: #007bff !important;
+}

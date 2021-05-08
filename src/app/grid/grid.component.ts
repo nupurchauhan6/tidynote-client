@@ -1,20 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AppNoteService } from '../app-note.service';
-import { GridService } from './grid.service';
 import { IconRendererComponent } from './icon-renderer.component';
 import { faFileDownload, faBookReader, faTrashAlt, faEdit, faCopy, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ModalComponent } from '../modal/modal.component';
+import { EditorComponent } from '../editor/editor.component';
+import { MODAL_CONFIG } from '../app.constant';
+import { AppState } from '../state/app.state';
+import { Store } from '@ngrx/store';
+import * as UserSelectors from '../selectors/user.selector';
+import * as NoteActions from '../actions/note.action';
+import * as NoteSelectors from '../selectors/note.selector';
 
 export const Action = {
-  READ: "Read",
-  CLONE: "Clone",
-  DELETE: "Delete",
-  DOWNLOAD: "Download",
-  EDIT: "Edit",
-  SHARE: "Share"
-}
+  READ: 'Read',
+  CLONE: 'Clone',
+  DELETE: 'Delete',
+  DOWNLOAD: 'Download',
+  EDIT: 'Edit',
+  SHARE: 'Share'
+};
 
 @Component({
   selector: 'app-grid',
@@ -90,50 +94,45 @@ export class GridComponent implements OnInit {
       }
     },
     frameworkComponents: {
-      'iconRenderer': IconRendererComponent
+      iconRenderer: IconRendererComponent
     }
-  }
+  };
   private bsModalRef: BsModalRef;
+  private userId: string;
 
-  constructor(private gridService: GridService, private appService: AppNoteService, private modalService: BsModalService) { }
+  constructor(private modalService: BsModalService, private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.appService.getAllNotes().subscribe(
-      data => {
-        if (data) {
-          this.rowData = data;
-        }
+    this.store.select(UserSelectors.getUserID).subscribe(userId => {
+      if (userId) {
+        this.userId = userId;
+        this.store.dispatch(NoteActions.loadNotes({ userId: this.userId }));
       }
-    );
+    });
 
-    this.gridService.updateGrid().subscribe(
-      data => {
-        if (data && this.gridApi) {
-          this.rowData.push(data);
-          this.gridApi.setRowData(this.rowData);
-        }
-      }
-    );
+    this.store.select(NoteSelectors.getNotes).subscribe(notes => {
+      this.rowData = notes;
+    });
   }
 
-  onGridReady(params: any) {
+  onGridReady(params: any): void {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
 
-  onIconClick(params: any) {
+  onIconClick(params: any): void {
     switch (params.action) {
       case Action.READ:
-        this.bsModalRef = this.modalService.show(ModalComponent);
-        this.bsModalRef.content.editorContent = params.rowData.content;
+        this.bsModalRef = this.modalService.show(EditorComponent, MODAL_CONFIG);
+        this.bsModalRef.content.content = params.rowData.content;
         this.bsModalRef.content.title = params.rowData.title;
         this.bsModalRef.content.readOnly = true;
         this.bsModalRef.content.modules = { toolbar: false };
         break;
       case Action.EDIT:
-        this.bsModalRef = this.modalService.show(ModalComponent);
-        this.bsModalRef.content.editorContent = params.rowData.content;
+        this.bsModalRef = this.modalService.show(EditorComponent, MODAL_CONFIG);
+        this.bsModalRef.content.content = params.rowData.content;
         this.bsModalRef.content.title = params.rowData.title;
         this.bsModalRef.content.readOnly = false;
         this.bsModalRef.content.modules = { toolbar: true };

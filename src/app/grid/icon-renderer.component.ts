@@ -4,8 +4,8 @@ import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
     selector: 'app-button-renderer',
-    styles: ["::ng-deep fa-icon { color: #007bff; cursor: pointer; font-size:medium; display:block; text-align:right }"],
-    template: `<fa-icon [icon]="icon" (click)="onClick()"></fa-icon>`
+    styles: ['.grid-icon { color: #007bff; cursor: pointer; font-size:medium; display:block; text-align:right }'],
+    template: `<fa-icon [icon]="icon" class="grid-icon" (click)="onClick()"></fa-icon>`
 })
 
 export class IconRendererComponent implements ICellRendererAngularComp {
@@ -22,12 +22,12 @@ export class IconRendererComponent implements ICellRendererAngularComp {
         return true;
     }
 
-    onClick() {
+    onClick(): void {
         if (this.params.onClick instanceof Function) {
             const params = {
                 action: this.params.colDef.headerName,
                 rowData: this.params.node.data
-            }
+            };
             this.params.onClick(params);
         }
     }
