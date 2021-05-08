@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import * as UserSelectors from '../selectors/user.selector';
 import * as NoteActions from '../actions/note.action';
 import * as NoteSelectors from '../selectors/note.selector';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 export const Action = {
   READ: 'Read',
@@ -100,7 +101,7 @@ export class GridComponent implements OnInit {
   private bsModalRef: BsModalRef;
   private userId: string;
 
-  constructor(private modalService: BsModalService, private store: Store<AppState>) { }
+  constructor(private modalService: BsModalService, private store: Store<AppState>, private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.store.select(UserSelectors.getUserID).subscribe(userId => {
@@ -112,6 +113,7 @@ export class GridComponent implements OnInit {
 
     this.store.select(NoteSelectors.getNotes).subscribe(notes => {
       this.rowData = notes;
+      this.spinner.hide();
     });
   }
 

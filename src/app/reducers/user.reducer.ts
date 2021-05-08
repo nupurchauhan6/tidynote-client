@@ -10,14 +10,16 @@ export const initialState: UserState = {
         email: '',
         mobileNumber: '',
         password: ''
-    }
+    },
+    isUserLoggedIn: false
 };
 
 const reducer = createReducer(
     initialState,
     on(UserActions.loginSuccess, (state, action) => ({
         ...state,
-        userProfile: action.userProfile
+        userProfile: action.userProfile,
+        isUserLoggedIn: true
     }))
 );
 

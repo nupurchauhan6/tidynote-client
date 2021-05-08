@@ -1,23 +1,28 @@
 <div class="row dashboard">
-    <div class="sidebar" [class.col-2] = "openSlide" [class.col-1] = "!openSlide">
-        <div class="toggle_btn">
-            <fa-icon [icon]="toggleIcon" class="fa-2x" (click)="toggleButton()"></fa-icon>
+    <div class="sidebar col-2" *ngIf="!toggleSideBar">
+        <div class="toggle-btn">
+            <fa-icon [icon]="toggleIcon" class="fa-2x fa-pull-right" (click)="toggleButton()"></fa-icon>
         </div>
-        <div class="menu" *ngIf="openSlide">
+        <div class="menu">
             <div>Main Menu</div>
             <div class="breakpoint"></div>
-            <div>
-                <fa-icon [icon]="profileIcon" class="menu_icon"></fa-icon>Profile
-            </div>
-            <div>
-                <fa-icon [icon]="settingIcon"  class="menu_icon"></fa-icon>Settings
-            </div>
-            <div>
-                <fa-icon [icon]="logoutIcon"  class="menu_icon"></fa-icon>Log Out
+            <div *ngFor="let item of menuItems">
+                <fa-icon [icon]="item.icon" class="menu-icon"></fa-icon>{{item.name}}
             </div>
         </div>
     </div>
-    <div [class.col-10] = "openSlide" [class.col-11] = "!openSlide">
+    <div class="sidebar-close col" *ngIf="toggleSideBar">
+        <div class="toggle-btn">
+            <fa-icon [icon]="toggleIcon" class="fa-2x" (click)="toggleButton()"></fa-icon>
+        </div>
+        <div class="menu">
+            <div class="breakpoint"></div>
+            <div *ngFor="let item of menuItems">
+                <fa-icon [icon]="item.icon"></fa-icon>
+            </div>
+        </div>
+    </div>
+    <div [class.col-10]="!toggleSideBar" [class.col-11]="toggleSideBar">
         <button type="button" class="btn btn-primary" (click)="openEditorModal()">Create New</button>
         <app-grid></app-grid>
     </div>

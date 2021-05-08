@@ -29,6 +29,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { noteReducer } from './reducers/note.reducer';
 import { NoteEffects } from './effects/note.effect';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { NoteEffects } from './effects/note.effect';
     CarouselModule.forRoot(),
     StoreModule.forRoot({ user: userReducer, notes: noteReducer }),
     EffectsModule.forRoot([UserEffects, NoteEffects]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    NgxSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

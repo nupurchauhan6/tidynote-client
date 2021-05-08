@@ -1,5 +1,10 @@
-.sidebar {
+.sidebar, .sidebar-close {
     background-color: #007bff;
+    border-top-right-radius: 30px;
+}
+
+.sidebar-close {
+    flex-grow: 0 !important;
 }
 
 .dashboard {
@@ -20,12 +25,12 @@
     margin: 10px 0px;
 }
 
-.toggle_btn {
+.toggle-btn {
     color: white;
-    text-align: end;
     cursor: pointer;
+    text-align: center !important;
 }
 
-.menu_icon {
+.menu-icon {
     margin-right: 10px;
 }
